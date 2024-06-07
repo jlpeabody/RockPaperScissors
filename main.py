@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from random import randrange
+from typing import Literal
 
 app = FastAPI()
 
@@ -21,7 +22,6 @@ def opp_weapon() -> str:
     """Returns a random weapon for the opponent's weapon
 
     :return: The opponent's weapon
-    :type: str
     """
     return weapons[randrange(0, 3)]
 
@@ -32,7 +32,11 @@ async def read_root():
 
 
 @app.get('/shoot/{weapon}')
-async def shoot(weapon: str):
+async def shoot(weapon: Literal['rock', 'paper', 'scissors']):
+    """Call to play a game of Rock-Paper-Scissors
+
+    Each call requires the weapon parameter to be a rock, paper, or scissors.
+    """
     opponent: str = opp_weapon()
     message = game_key[(weapon, opponent)]
     result = {'user_weapon': weapon, 'opponent_weapon': opponent, 'message': message}
